@@ -1,61 +1,26 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   StyleSheet,
   Text,
-  View,
   SafeAreaView,
   FlatList,
-  Image,
 } from 'react-native';
-import {products} from './productData';
-
-type TProductItemProps = {
-  id: number;
-  title: string;
-  brand: string;
-  description: string;
-  price: number;
-  thumbnail: string;
-};
-
-const ProductItem = ({
-  id,
-  title,
-  brand,
-  description,
-  price,
-  thumbnail,
-}: TProductItemProps) => {
-  return (
-    <View
-      key={id}
-      style={styles.productCardStyle}>
-      <View style={{flex: 0.4, justifyContent: 'center'}}>
-        <Image
-          source={{uri: thumbnail}}
-          style={styles.productImageStyle}
-        />
-      </View>
-      <View style={{flex: 0.6, justifyContent: 'center',}}>
-        <Text style={styles.titleText}>{title}</Text>
-        <Text style={styles.subText}>{brand}</Text>
-        <Text style={styles.subText}>{description}</Text>
-        <Text style={[styles.titleText,{fontSize:16}]}>{'$ ' +price }</Text>
-      </View>
-    </View>
-  );
-};
+import {TProduct, products} from './productData';
+import ProductItem from './ProductCard';
 
 interface IProductListProps {}
 
 const ProductList = (props: IProductListProps) => {
+
+  const renderItem = useCallback(({item, index}:{item: TProduct, index: number}) => <ProductItem {...item} />, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.headerTextStyle}>{'Product List'}</Text>
       <FlatList
         data={products}
         keyExtractor={(_, index) => index.toString()}
-        renderItem={({item, index}) => <ProductItem {...item} />}
+        renderItem={renderItem}
       />
     </SafeAreaView>
   );
@@ -63,7 +28,7 @@ const ProductList = (props: IProductListProps) => {
 
 export default ProductList;
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
